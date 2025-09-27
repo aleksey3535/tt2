@@ -10,8 +10,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	
 	httpswagger "github.com/swaggo/http-swagger"
+	_ "tt2/docs"
+	
 )
 
 type RepositoryI interface {
@@ -41,6 +42,7 @@ func New(log *slog.Logger, cfg *config.Config, mw *middleware.Middleware, repo R
 
 func (h *Handler) InitRoutes() *mux.Router {
 	mux := mux.NewRouter()
+	mux.PathPrefix("/swagger/").Handler(httpswagger.WrapHandler)
 	mux.Use(h.mw.UseHeaders)
 	mux.HandleFunc("/subscriptions", h.createSubscription).Methods("POST")
 	mux.HandleFunc("/subscriptions", h.getAllSubscriptions).Methods("GET")
@@ -48,7 +50,6 @@ func (h *Handler) InitRoutes() *mux.Router {
 	mux.HandleFunc("/subscriptions/{id:[0-9]+}", h.deleteSubscription).Methods("DELETE")
 	mux.HandleFunc("/subscriptions/{id:[0-9]+}", h.updateSubscription).Methods("PUT")
 	mux.HandleFunc("/subscriptions/total", h.totalSubscriptions).Methods("GET")
-	mux.PathPrefix("/swagger/").Handler(httpswagger.WrapHandler)
 	mux.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(`{"error":"not found"}`))

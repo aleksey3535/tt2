@@ -1,6 +1,12 @@
 package repository
 
-import "github.com/jmoiron/sqlx"
+import (
+	"errors"
+
+	"github.com/jmoiron/sqlx"
+)
+
+var ErrNotFound = errors.New("subscription not found")
 
 type Repository struct {
 	db *sqlx.DB

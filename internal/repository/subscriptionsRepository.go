@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"fmt"
 	"time"
 	"tt2/internal/models"
@@ -33,6 +34,9 @@ func (r *Repository) GetByID(id int) (models.Subscription, error) {
 	query := `SELECT id, service_name, price, user_id, start_date FROM subscriptions WHERE id=$1`
 	err := r.db.Get(&sub, query, id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return models.Subscription{}, ErrNotFound
+		}
 		return models.Subscription{}, err
 	}
 	return sub, nil

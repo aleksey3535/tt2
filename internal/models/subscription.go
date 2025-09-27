@@ -4,18 +4,10 @@ import (
 	"time"
 )
 
-// type CustomDate time.Time
 
-// func (cd *CustomDate) UnmarshalJSON(b []byte) error {
-//     s := strings.Trim(string(b), "\"")
-//     t, err := time.Parse("01-2006", s)
-//     if err != nil {
-//         return err
-//     }
-//     *cd = CustomDate(t)
-//     return nil
-// }
-
+// SubscriptionForCreate описывает тело запроса создания подписки
+//
+// swagger:model SubscriptionForCreate
 type SubscriptionForCreate struct {
 	ServiceName string `json:"service_name" db:"service_name"`
 	Price       int    `json:"price" db:"price"`
